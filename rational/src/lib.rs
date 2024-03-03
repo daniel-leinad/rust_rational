@@ -49,17 +49,16 @@ impl FromStr for Rational {
     type Err = &'static str;
     
     fn from_str(value: &str) -> Result<Self, Self::Err> {
-        if value.len() == 0 { return Err("Error parsing string") };
-
         let mut numbers_str = String::with_capacity(value.len());
         let mut chars_iter = value.chars().peekable();
         let first_char = chars_iter.peek();
         
-        let sign = if let Some('-') = first_char {
-            chars_iter.next();
-            -1
-        } else {
-            1
+        let sign = match first_char {
+            Some('-') => {
+                chars_iter.next();
+                -1
+            },
+            _ => {1}
         };
         
         for char in &mut chars_iter {
@@ -73,7 +72,10 @@ impl FromStr for Rational {
             numbers_str.push(char);
             decimal_power += 1;
         };
-        let p: SignedInt = numbers_str.parse().expect("String must parse because it only contains digits, as ensured earlier");
+
+        if numbers_str.len() == 0 { return Err("Error parsing string") };
+
+        let p: SignedInt = numbers_str.parse().expect("String must parse because it is non-empty and only contains digits, as ensured earlier");
         let q: SignedInt = (10 as SignedInt).pow(decimal_power);
         Ok(Rational::new(sign * p, q))
     }
@@ -382,6 +384,12 @@ mod tests {
     #[test]
     fn cant_parse_incorrect_string_3() {
         let result: Result<Rational, _> = "123-5.".parse();
+        assert_eq!(Err("Error parsing string"), result);
+    }
+
+    #[test]
+    fn cant_parse_incorrect_string_4() {
+        let result: Result<Rational, _> = "-".parse();
         assert_eq!(Err("Error parsing string"), result);
     }
 
