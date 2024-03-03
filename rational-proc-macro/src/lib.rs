@@ -6,7 +6,7 @@ use std::stringify;
 #[proc_macro]
 pub fn rational(input: TokenStream) -> TokenStream {
     let str = input.to_string();
-    let rational: Rational = str.parse().unwrap();
+    let rational: Rational = str.parse().expect(&format!("Incorrect rational literal: {str}"));
     let (p, q) = (rational.numerator(), rational.denominator());
 
     let expanded = quote!{
