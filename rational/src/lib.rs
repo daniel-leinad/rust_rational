@@ -1,4 +1,5 @@
 use std::ops::{Add, Div, Mul, Neg, Sub};
+use std::str::FromStr;
 
 type UnsignedInt = usize;
 type SignedInt = isize;
@@ -36,33 +37,37 @@ impl From<SignedInt> for Rational {
     }
 }
 
-impl From<&str> for Rational {
-    fn from(value: &str) -> Self {
-        if value.len() == 0 { panic!("Error parsing string") };
+impl FromStr for Rational {    
+    type Err = &'static str;
+    
+    fn from_str(value: &str) -> Result<Self, Self::Err> {
+        if value.len() == 0 { return Err("Error parsing string") };
 
         let mut numbers_str = String::with_capacity(value.len());
         let mut chars_iter = value.chars().peekable();
         let first_char = chars_iter.peek();
+        
         let sign = if let Some('-') = first_char {
             chars_iter.next();
             -1
         } else {
             1
         };
+        
         for char in &mut chars_iter {
             if char == '.' { break };
-            if !char.is_digit(10) { panic!("Error parsing string") };
+            if !char.is_digit(10) { return Err("Error parsing string") };
             numbers_str.push(char);
         };
         let mut decimal_power = 0;
         for char in chars_iter {
-            if !char.is_digit(10) { panic!("Error parsing string") };
+            if !char.is_digit(10) { return Err("Error parsing string") };
             numbers_str.push(char);
             decimal_power += 1;
         };
         let p: SignedInt = numbers_str.parse().expect("String must parse because it only contains digits, as ensured earlier");
         let q: SignedInt = (10 as SignedInt).pow(decimal_power);
-        Rational::new(sign * p, q)
+        Ok(Rational::new(sign * p, q))
     }
 }
 
@@ -253,123 +258,123 @@ mod tests {
 
     #[test]
     fn it_converts_from_string_int() {
-        let a: Rational = "1".into();
+        let a: Rational = "1".parse().unwrap();
         let b = Rational::new(1, 1);
         assert_eq!(a, b);
 
-        let a: Rational = "0".into();
+        let a: Rational = "0".parse().unwrap();
         let b = Rational::new(0, 1);
         assert_eq!(a, b);
 
-        let a: Rational = "01".into();
+        let a: Rational = "01".parse().unwrap();
         let b = Rational::new(1, 1);
         assert_eq!(a, b);
 
-        let a: Rational = "348763".into();
+        let a: Rational = "348763".parse().unwrap();
         let b = Rational::new(348763, 1);
         assert_eq!(a, b);
     }
 
     #[test]
     fn it_converts_from_string_decimal() {
-        let a: Rational = "1.5".into();
+        let a: Rational = "1.5".parse().unwrap();
         let b = Rational::new(3, 2);
         assert_eq!(a, b);
 
-        let a: Rational = "12.5".into();
+        let a: Rational = "12.5".parse().unwrap();
         let b = Rational::new(125, 10);
         assert_eq!(a, b);
 
-        let a: Rational = "0.5".into();
+        let a: Rational = "0.5".parse().unwrap();
         let b = Rational::new(1, 2);
         assert_eq!(a, b);
 
-        let a: Rational = "0.05".into();
+        let a: Rational = "0.05".parse().unwrap();
         let b = Rational::new(1, 20);
         assert_eq!(a, b);
 
-        let a: Rational = ".5".into();
+        let a: Rational = ".5".parse().unwrap();
         let b = Rational::new(1, 2);
         assert_eq!(a, b);
 
-        let a: Rational = "5.".into();
+        let a: Rational = "5.".parse().unwrap();
         let b = Rational::new(5, 1);
         assert_eq!(a, b);
 
-        let a: Rational = "0.".into();
+        let a: Rational = "0.".parse().unwrap();
         let b = Rational::new(0, 1);
         assert_eq!(a, b);
     }
 
     #[test]
     fn it_converts_from_string_negative() {
-        let a: Rational = "-1".into();
+        let a: Rational = "-1".parse().unwrap();
         let b = Rational::new(-1, 1);
         assert_eq!(a, b);
 
-        let a: Rational = "-0".into();
+        let a: Rational = "-0".parse().unwrap();
         let b = Rational::new(-0, 1);
         assert_eq!(a, b);
 
-        let a: Rational = "-01".into();
+        let a: Rational = "-01".parse().unwrap();
         let b = Rational::new(-1, 1);
         assert_eq!(a, b);
 
-        let a: Rational = "-348763".into();
+        let a: Rational = "-348763".parse().unwrap();
         let b = Rational::new(-348763, 1);
         assert_eq!(a, b);
 
-        let a: Rational = "-1.5".into();
+        let a: Rational = "-1.5".parse().unwrap();
         let b = Rational::new(-3, 2);
         assert_eq!(a, b);
 
-        let a: Rational = "-12.5".into();
+        let a: Rational = "-12.5".parse().unwrap();
         let b = Rational::new(-125, 10);
         assert_eq!(a, b);
 
-        let a: Rational = "-0.5".into();
+        let a: Rational = "-0.5".parse().unwrap();
         let b = Rational::new(-1, 2);
         assert_eq!(a, b);
 
-        let a: Rational = "-0.05".into();
+        let a: Rational = "-0.05".parse().unwrap();
         let b = Rational::new(-1, 20);
         assert_eq!(a, b);
 
-        let a: Rational = "-.5".into();
+        let a: Rational = "-.5".parse().unwrap();
         let b = Rational::new(-1, 2);
         assert_eq!(a, b);
 
-        let a: Rational = "-5.".into();
+        let a: Rational = "-5.".parse().unwrap();
         let b = Rational::new(-5, 1);
         assert_eq!(a, b);
 
-        let a: Rational = "-0.".into();
+        let a: Rational = "-0.".parse().unwrap();
         let b = Rational::new(0, 1);
         assert_eq!(a, b);
     }
 
-    #[should_panic(expected = "Error parsing string")]
     #[test]
     fn cant_parse_empty_string() {
-        let _result: Rational = "".into();
+        let result: Result<Rational, _> = "".parse();
+        assert_eq!(Err("Error parsing string"), result);
     }
 
-    #[should_panic(expected = "Error parsing string")]
     #[test]
     fn cant_parse_incorrect_string_1() {
-        let _res: Rational = "sdjshdj".into();
+        let result: Result<Rational, _> = "sdjshdj".parse();
+        assert_eq!(Err("Error parsing string"), result);
     }
 
-    #[should_panic(expected = "Error parsing string")]
     #[test]
     fn cant_parse_incorrect_string_2() {
-        let _res: Rational = "1.2.3".into();
+        let result: Result<Rational, _> = "1.2.3".parse();
+        assert_eq!(Err("Error parsing string"), result);
     }
 
-    #[should_panic(expected = "Error parsing string")]
     #[test]
     fn cant_parse_incorrect_string_3() {
-        let _res: Rational = "123-5.".into();
+        let result: Result<Rational, _> = "123-5.".parse();
+        assert_eq!(Err("Error parsing string"), result);
     }
 
     #[test]
@@ -421,7 +426,7 @@ mod tests {
         check_addition(1.into(), 2.into(), 3.into());
         check_addition(0.into(), 5.into(), 5.into());
         check_addition((-3).into(), 5.into(), 2.into());
-        check_addition("2.3".into(), "10.185".into(), "12.485".into());
+        check_addition("2.3".parse().unwrap(), "10.185".parse().unwrap(), "12.485".parse().unwrap());
     }
 
     #[test]
@@ -444,9 +449,9 @@ mod tests {
         let b = (-3).into();
         check_substraction(a, b, 8.into());
 
-        let a: Rational = "0.3".into();
-        let b = "0.1".into();
-        check_substraction(a, b, "0.2".into());
+        let a: Rational = "0.3".parse().unwrap();
+        let b = "0.1".parse().unwrap();
+        check_substraction(a, b, "0.2".parse().unwrap());
     }
 
     fn check_addition(a: Rational, b: Rational, res: Rational) {
