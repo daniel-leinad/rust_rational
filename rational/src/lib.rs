@@ -77,6 +77,7 @@ impl FromStr for Rational {
 
         if numbers_str.len() == 0 { return Err("Error parsing string") };
 
+        // TODO: there are still possible parsing errors like PosOverFlow that should be handled instead of panicking
         let p: SignedInt = numbers_str.parse().expect("String must parse because it is non-empty and only contains digits, as ensured earlier");
         let q: SignedInt = (10 as SignedInt).pow(decimal_power);
         Ok(Rational::new(sign * p, q))
