@@ -8,4 +8,7 @@ fn simple_test() {
 
     let a = rational!(1.5);
     assert_eq!(a, Rational::new(3,2));
+
+    let a = rational!(-23.57);
+    assert_eq!(a, Rational::new(-2357, 100));
 }

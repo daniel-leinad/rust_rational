@@ -56,6 +56,8 @@ impl FromStr for Rational {
         let sign = match first_char {
             Some('-') => {
                 chars_iter.next();
+                let second_char = chars_iter.peek();
+                if let Some(' ') = second_char { chars_iter.next(); };
                 -1
             },
             _ => {1}
@@ -359,6 +361,54 @@ mod tests {
         assert_eq!(a, b);
 
         let a: Rational = "-0.".parse().unwrap();
+        let b = Rational::new(0, 1);
+        assert_eq!(a, b);
+    }
+
+    #[test]
+    fn it_converts_from_string_negative_with_space() {
+        // this way of parsing is necessary for the procedural macro: e.g. both "-5" and "- 5" are tokenized the same way
+        let a: Rational = "- 1".parse().unwrap();
+        let b = Rational::new(-1, 1);
+        assert_eq!(a, b);
+
+        let a: Rational = "- 0".parse().unwrap();
+        let b = Rational::new(-0, 1);
+        assert_eq!(a, b);
+
+        let a: Rational = "- 01".parse().unwrap();
+        let b = Rational::new(-1, 1);
+        assert_eq!(a, b);
+
+        let a: Rational = "- 348763".parse().unwrap();
+        let b = Rational::new(-348763, 1);
+        assert_eq!(a, b);
+
+        let a: Rational = "- 1.5".parse().unwrap();
+        let b = Rational::new(-3, 2);
+        assert_eq!(a, b);
+
+        let a: Rational = "- 12.5".parse().unwrap();
+        let b = Rational::new(-125, 10);
+        assert_eq!(a, b);
+
+        let a: Rational = "- 0.5".parse().unwrap();
+        let b = Rational::new(-1, 2);
+        assert_eq!(a, b);
+
+        let a: Rational = "- 0.05".parse().unwrap();
+        let b = Rational::new(-1, 20);
+        assert_eq!(a, b);
+
+        let a: Rational = "- .5".parse().unwrap();
+        let b = Rational::new(-1, 2);
+        assert_eq!(a, b);
+
+        let a: Rational = "- 5.".parse().unwrap();
+        let b = Rational::new(-5, 1);
+        assert_eq!(a, b);
+
+        let a: Rational = "- 0.".parse().unwrap();
         let b = Rational::new(0, 1);
         assert_eq!(a, b);
     }
