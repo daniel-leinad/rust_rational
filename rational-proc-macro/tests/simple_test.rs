@@ -11,4 +11,13 @@ fn simple_test() {
 
     let a = rational!(-23.57);
     assert_eq!(a, Rational::new(-2357, 100));
+
+    let a = rational!(.15);
+    assert_eq!(a, Rational::new(15, 100));
+
+    let a = rational!(-0.);
+    assert_eq!(a, Rational::new(0, 1));
+
+    let a = rational!(-1.);
+    assert_eq!(a, Rational::new(-1, 1));
 }
