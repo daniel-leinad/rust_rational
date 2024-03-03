@@ -23,6 +23,14 @@ impl Rational {
         self.p = self.p / gcd;
         self.q = self.q / gcd;
     }
+
+    pub fn numerator(&self) -> SignedInt {
+        self.p
+    }
+
+    pub fn denominator(&self) -> SignedInt {
+        self.q
+    }
 }
 
 impl PartialEq for Rational {

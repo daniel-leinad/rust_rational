@@ -1,4 +1,6 @@
 [workspace]
 members = [
-    "rational",
+    "rational", 
+    "rational-proc-macro",
 ]
+resolver = "2"
