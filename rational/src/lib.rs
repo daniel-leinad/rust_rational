@@ -139,38 +139,6 @@ impl Sub for Rational {
     }
 }
 
-
-
-// struct RawDecimalParts<'a> {
-//     int: &'a str,
-//     decimal: &'a str,
-// }
-
-// impl<'a> RawDecimalParts<'a> {
-//     fn from_str(value: &'a str) -> Self {
-//         let int_end = None;
-//         let mut chars_iter = value.char_indices();
-//         for (idx, char) in &mut chars_iter {
-//             if char == '.' {
-//                 int_end = Some(idx);
-//                 break;
-//             };
-            
-//             if !char.is_digit(10) { 
-//                 panic!("Error parsing string"); 
-//             };
-//         };
-//         let int_end = int_end.
-//         for (_, char) in chars_iter {
-//             if !char.is_digit(10) { panic!("Error parsing string") };
-//         };
-
-//         let (int_str, remainder) = value.split_at(int_end);
-//         let decimal_str = remainder.strip_prefix(".").expect("Must start with \".\" because it would've panicked earlier");
-//         RawDecimalParts { int: int_str, decimal: decimal_str}
-//     }
-// }
-
 fn gcd(mut a: UnsignedInt, mut b: UnsignedInt) -> UnsignedInt {
     if min(a, b) == 1 { return 1 };
 
