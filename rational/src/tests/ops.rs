@@ -1,0 +1,140 @@
+use super::*;
+
+#[test]
+fn zero_is_zero() {
+    let a =  Rational::new(0, 1);
+    let b =  Rational::new(0, -1343535);
+    assert_eq!(a, b);
+}
+
+#[test]
+fn it_equates() {
+    let a = Rational::new(15, 5);
+    let b = Rational::new(15, 5);
+    assert_eq!(a, b);
+
+    let a = Rational::new(15, 5);
+    let b = Rational::new(3, 1);
+    assert_eq!(a, b);
+
+    let a = Rational::new(15, -5);
+    let b = Rational::new(-15, 5);
+    assert_eq!(a, b);
+
+    let a = Rational::new(15, 5);
+    let b = Rational::new(-3, -1);
+    assert_eq!(a, b);
+}
+
+#[test]
+fn it_non_equates() {
+    let a = Rational::new(15, 1);
+    let b = Rational::new(3, 1);
+    assert_ne!(a, b);
+
+    let a = Rational::new(1, 1);
+    let b = Rational::new(-1, 1);
+    assert_ne!(a, b);
+
+    let a = Rational::new(1, 14);
+    let b = Rational::new(14, 1);
+    assert_ne!(a, b);
+}
+
+#[test]
+fn it_multiplies() {
+    check_multiplication(0.into(), 5.into(), 0.into());
+    check_multiplication(1.into(), 5.into(), 5.into());
+
+    check_multiplication(3.into(), 5.into(), 15.into());
+    check_multiplication(3.into(), (-5).into(), (-15).into());
+
+    let a = Rational::new(15, 10);
+    let b = Rational::new(6, 1);
+    check_multiplication(a, b, 9.into());
+
+    let a = Rational::new(-1, 2);
+    let b: Rational = 3.into();
+    check_multiplication(a, b, Rational::new(-3, 2));
+}
+
+#[test]
+fn it_divides() {
+    let a: Rational = 15.into();
+    let b: Rational = 3.into();
+    assert_eq!(a / b, 5.into());
+
+    let a: Rational = (-15).into();
+    let b: Rational = 3.into();
+    assert_eq!(a / b, (-5).into());
+
+    let a: Rational = 1.into();
+    let b: Rational = 5.into();
+    assert_eq!(a / b, Rational::new(1, 5));
+
+    let a: Rational = (-3).into();
+    let b: Rational = (-5).into();
+    assert_eq!(a / b, Rational::new(3, 5));
+}
+
+#[should_panic(expected="Can't divide by zero")]
+#[test]
+fn doesnt_divide_by_zero() {
+    let a: Rational = 1.into();
+    let b: Rational = 0.into();
+    let _res = a / b;
+}
+
+#[test]
+fn it_adds() {
+    check_addition(1.into(), 2.into(), 3.into());
+    check_addition(0.into(), 5.into(), 5.into());
+    check_addition((-3).into(), 5.into(), 2.into());
+    check_addition("2.3".parse().unwrap(), "10.185".parse().unwrap(), "12.485".parse().unwrap());
+}
+
+#[test]
+fn it_negates() {
+    let a: Rational = 5.into();
+    assert_eq!(-a, (-5).into());
+}
+
+#[test]
+fn it_substracts() {
+    let a: Rational = 5.into();
+    let b = 0.into();
+    check_substraction(a, b, 5.into());
+
+    let a: Rational = 5.into();
+    let b = 3.into();
+    check_substraction(a, b, 2.into());
+
+    let a: Rational = 5.into();
+    let b = (-3).into();
+    check_substraction(a, b, 8.into());
+
+    let a: Rational = "0.3".parse().unwrap();
+    let b = "0.1".parse().unwrap();
+    check_substraction(a, b, "0.2".parse().unwrap());
+}
+
+fn check_addition(a: Rational, b: Rational, res: Rational) {
+
+    assert_eq!(a + b, res);
+    assert_eq!(b + a, res);
+
+}
+
+fn check_multiplication(a: Rational, b: Rational, res: Rational) {
+
+    assert_eq!(a * b, res);
+    assert_eq!(b * a, res);
+
+}
+
+fn check_substraction(a: Rational, b: Rational, res: Rational) {
+
+    assert_eq!(a - b, res);
+    assert_eq!(b - a, -res);
+
+}
