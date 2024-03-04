@@ -1,3 +1,4 @@
+use std::cmp::min;
 use std::ops::{Add, Div, Mul, Neg, Sub};
 use std::str::FromStr;
 
@@ -170,6 +171,8 @@ impl Sub for Rational {
 // }
 
 fn gcd(mut a: UnsignedInt, mut b: UnsignedInt) -> UnsignedInt {
+    if min(a, b) == 1 { return 1 };
+    
     while a != b {
         if a > b {
             a = a - b;
@@ -212,6 +215,14 @@ mod tests {
 
     #[test]
     fn it_reduces() {
+        let result = Rational::new(1000, 1);
+        assert_eq!(result.p.abs(), 1000);
+        assert_eq!(result.q.abs(), 1);
+
+        let result = Rational::new(1000, 2);
+        assert_eq!(result.p.abs(), 500);
+        assert_eq!(result.q.abs(), 1);
+
         let result = Rational::new(15, 3);
         assert_eq!(result.p.abs(), 5);
         assert_eq!(result.q.abs(), 1);
