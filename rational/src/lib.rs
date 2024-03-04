@@ -19,7 +19,7 @@ impl Rational {
         res
     }
 
-    /// Creates a new Rational without reducing its parts, 
+    /// Creates a new Rational without reducing the fraction, 
     /// therefore should only be used when you are 100% certain numerator and denominator are reduced 
     /// Can be used for optimisations
     pub fn new_reduced(p: SignedInt, q: SignedInt) -> Rational {
