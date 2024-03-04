@@ -16,6 +16,8 @@ pub struct Rational {
 }
 
 impl Rational {
+    /// Builds a new rational and reduces the undelying fraction
+    /// Panics when q == 0
     pub fn new(p: SignedInt, q: SignedInt) -> Rational {
         if q == 0 { panic!("Denominator can't be zero!") };
         let mut res = Rational { p, q };
@@ -26,6 +28,7 @@ impl Rational {
     /// Creates a new Rational without reducing the fraction, 
     /// therefore should only be used when you are 100% certain numerator and denominator are reduced 
     /// Can be used for optimisations
+    /// Panics when q == 0
     pub fn new_reduced(p: SignedInt, q: SignedInt) -> Rational {
         if q == 0 { panic!("Denominator can't be zero!") };
         Rational { p, q }
