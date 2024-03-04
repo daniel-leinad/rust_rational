@@ -18,6 +18,14 @@ impl Rational {
         res
     }
 
+    /// Creates a new Rational without reducing its parts, 
+    /// therefore should only be used when you are 100% certain numerator and denominator are reduced 
+    /// Can be used for optimisations
+    pub fn new_reduced(p: SignedInt, q: SignedInt) -> Rational {
+        if q == 0 { panic!("Denominator can't be zero!") };
+        Rational { p, q }
+    }
+
     fn reduce(&mut self) {
         let gcd = gcd(self.p.abs_diff(0), self.q.abs_diff(0)) as SignedInt;
         self.p = self.p / gcd;
@@ -519,6 +527,17 @@ mod tests {
         let a: Rational = "0.3".parse().unwrap();
         let b = "0.1".parse().unwrap();
         check_substraction(a, b, "0.2".parse().unwrap());
+    }
+
+    #[test]
+    fn new_reduced_works() {
+        let _res = Rational::new_reduced(10, 3); 
+    }
+
+    #[should_panic(expected = "Denominator can't be zero!")]
+    #[test]
+    fn new_reduced_does_not_work_when_denominator_is_zero() {
+        let _res = Rational::new_reduced(10, 0);
     }
 
     fn check_addition(a: Rational, b: Rational, res: Rational) {

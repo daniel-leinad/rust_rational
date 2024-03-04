@@ -10,7 +10,7 @@ pub fn rational(input: TokenStream) -> TokenStream {
     let (p, q) = (rational.numerator(), rational.denominator());
 
     let expanded = quote!{
-        Rational::new(#p, #q)
+        Rational::new_reduced(#p, #q)
     };
 
     TokenStream::from(expanded)
