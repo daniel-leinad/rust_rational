@@ -38,9 +38,18 @@ def make_floats(line_maker):
         for j in ["01", "5", "724", "333333"]:
             line_maker(str(i) + "." + j)
 
+@rust_func_wrapper
+def make_thousandsth_floats(line_maker):
+    for i in [3, 50234]:
+        for j in range(3, 103):
+            line_maker(f"{i}.{j:03}")
+
 make_ints("using_parse_int", make_line_parse)
 make_ints("using_macro_int", make_line_macro)
 
 make_floats("using_parse_float", make_line_parse)
 make_floats("using_macro_float", make_line_macro)
+
+make_thousandsth_floats("using_parse_float_2", make_line_parse)
+make_thousandsth_floats("using_macro_float_2", make_line_macro)
     
