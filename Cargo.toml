@@ -1,6 +1,7 @@
 [workspace]
-members = [ "benchmark",
+members = [ 
     "rational", 
     "rational-proc-macro",
+    "benchmark",
 ]
 resolver = "2"
