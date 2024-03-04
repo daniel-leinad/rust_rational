@@ -11,7 +11,7 @@ fn main() {
 
 fn measure_func(mut func: impl FnMut() -> (), name: &str) {
     let start_time = Instant::now();
-    for _ in 0..1000 {
+    for _ in 0..10000 {
         func();
     }
     let elapsed = start_time.elapsed();
