@@ -189,15 +189,15 @@ fn gcd(mut a: UnsignedInt, mut b: UnsignedInt) -> UnsignedInt {
         b = b / 2;
     };
 
-    while a != b {
+    while (a != 0) && (b != 0) {
         if a > b {
-            a = a - b;
+            a = a % b;
         } else {
-            b = b - a;
+            b = b % a;
         }
     }
 
-    return a * d
+    return (a + b) * d
 }
 
 #[cfg(test)]
