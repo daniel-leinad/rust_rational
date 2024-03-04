@@ -172,7 +172,23 @@ impl Sub for Rational {
 
 fn gcd(mut a: UnsignedInt, mut b: UnsignedInt) -> UnsignedInt {
     if min(a, b) == 1 { return 1 };
+
+    let mut d = 1;
+
+    while (a % 2 == 0) && (b % 2 == 0) {
+        a = a / 2;
+        b = b / 2;
+        d = d * 2;
+    };
     
+    while a % 2 == 0 {
+        a = a / 2;
+    };
+
+    while b % 2 == 0 {
+        b = b / 2;
+    };
+
     while a != b {
         if a > b {
             a = a - b;
@@ -181,7 +197,7 @@ fn gcd(mut a: UnsignedInt, mut b: UnsignedInt) -> UnsignedInt {
         }
     }
 
-    return a
+    return a * d
 }
 
 #[cfg(test)]
