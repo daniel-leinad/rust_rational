@@ -75,10 +75,6 @@ impl FromStr for Rational {
         let sign = match first_char {
             Some('-') => {
                 chars_iter.next();
-                let second_char = chars_iter.peek();
-                if let Some(' ') = second_char {
-                    chars_iter.next();
-                };
                 -1
             }
             _ => 1,

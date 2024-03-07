@@ -5,7 +5,12 @@ use std::stringify;
 
 #[proc_macro]
 pub fn rational(input: TokenStream) -> TokenStream {
-    let str = input.to_string();
+    // "-1.3(5)" is tokenized as "- 1.3 (5)", so we need to get rid of the whitespaces
+    let str = input
+        .to_string()
+        .replace("- ", "-")
+        .replace(" (", "(");
+
     let rational: Rational = str.parse().expect(&format!("Incorrect rational literal: {str}"));
     let (p, q) = (rational.numerator(), rational.denominator());
 

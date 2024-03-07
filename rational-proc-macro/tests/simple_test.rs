@@ -21,3 +21,21 @@ fn simple_test() {
     let a = rational!(-1.);
     assert_eq!(a, Rational::new(-1, 1));
 }
+
+#[test]
+fn repeating() {
+    let a = rational!(0.(3));
+    assert_eq!(a, Rational::new(1, 3));
+
+    let a = rational!(-0.(3));
+    assert_eq!(a, Rational::new(-1, 3));
+
+    let a = rational!(3.(571428));
+    assert_eq!(a, Rational::new(25, 7));
+
+    let a = rational!(-.(3));
+    assert_eq!(a, Rational::new(-1, 3));
+
+    let a = rational!(.(3));
+    assert_eq!(a, Rational::new(1, 3));
+}
