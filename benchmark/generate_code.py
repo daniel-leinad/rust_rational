@@ -44,6 +44,13 @@ def make_thousandsth_floats(line_maker):
         for j in range(3, 103):
             line_maker(f"{i}.{j:03}")
 
+@rust_func_wrapper
+def make_repeating(line_maker):
+    for int_part in ["0", "3", "32", "1253", "554999"]:
+        for float_part in ["", "0", "00", "000"]:
+            for repeating_part in ["3", "142857", "1", "322580645", "09"]:
+                line_maker(f"{int_part}.{float_part}({repeating_part})")
+
 make_ints("using_parse_int", make_line_parse)
 make_ints("using_macro_int", make_line_macro)
 
@@ -52,4 +59,7 @@ make_floats("using_macro_float", make_line_macro)
 
 make_thousandsth_floats("using_parse_float_2", make_line_parse)
 make_thousandsth_floats("using_macro_float_2", make_line_macro)
+
+make_repeating("using_parse_repeating", make_line_parse)
+make_repeating("using_macro_repeating", make_line_macro)
     
