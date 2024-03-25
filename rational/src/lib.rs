@@ -146,10 +146,13 @@ impl Sub for Rational {
 }
 
 fn gcd(mut a: UnsignedInt, mut b: UnsignedInt) -> UnsignedInt {
+
+    // Simple case optimization
     if min(a, b) == 1 { return 1 };
 
     let mut d = 1;
 
+    // Bitshift optimization technique
     while (a % 2 == 0) && (b % 2 == 0) {
         a = a / 2;
         b = b / 2;
@@ -164,6 +167,7 @@ fn gcd(mut a: UnsignedInt, mut b: UnsignedInt) -> UnsignedInt {
         b = b / 2;
     };
 
+    // Euclid's algorithm
     while (a != 0) && (b != 0) {
         if a > b {
             a = a % b;
