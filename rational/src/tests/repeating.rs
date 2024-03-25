@@ -93,3 +93,9 @@ fn doesnt_parse_all_kinds_of_incorrect_strings() {
     let a: Result<Rational, _> = "0.3)".parse();
     assert_eq!(a, Err("Error parsing string"));
 }
+
+#[test]
+fn doesnt_parse_no_digits_number() {
+    let a: Result<Rational, _> = ".()".parse();
+    assert_eq!(a, Err("Error parsing string"));
+}

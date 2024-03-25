@@ -149,3 +149,9 @@ fn cant_parse_incorrect_string_4() {
     let result: Result<Rational, _> = "-".parse();
     assert_eq!(Err("Error parsing string"), result);
 }
+
+#[test]
+fn doesnt_parse_two_periods() {
+    let res: Result<Rational, _> = "1..5".parse();
+    assert_eq!(res, Err("Error parsing string"));
+}
