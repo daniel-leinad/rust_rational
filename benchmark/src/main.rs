@@ -14,6 +14,11 @@ fn main() {
 
     measure_func(generated::using_parse_repeating, "using_parse_repeating");
     measure_func(generated::using_macro_repeating, "using_macro_repeating");
+
+    measure_func(generated::addition, "addition");
+    measure_func(generated::substraction, "substraction");
+    measure_func(generated::multiplication, "multiplication");
+    measure_func(generated::division, "division");
 }
 
 fn measure_func(mut func: impl FnMut() -> (), name: &str) {
