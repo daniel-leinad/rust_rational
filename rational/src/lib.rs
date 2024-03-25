@@ -18,6 +18,8 @@ pub struct Rational {
 }
 
 impl Rational {
+    /// Builds a new rational and reduces the undelying fraction
+    /// Panics when q == 0
     pub fn new(p: SignedInt, q: SignedInt) -> Rational {
         if q == 0 {
             panic!("Denominator can't be zero!")
@@ -32,6 +34,7 @@ impl Rational {
     /// Creates a new Rational without reducing the fraction,
     /// therefore should only be used when you are 100% certain numerator and denominator are reduced
     /// Can be used for optimisations
+    /// Panics when q == 0
     pub fn new_reduced(p: SignedInt, q: SignedInt) -> Rational {
         if q == 0 {
             panic!("Denominator can't be zero!")
@@ -269,12 +272,12 @@ impl Sub for Rational {
 }
 
 fn gcd(mut a: UnsignedInt, mut b: UnsignedInt) -> UnsignedInt {
-    if min(a, b) == 1 {
-        return 1;
-    };
+    // Simple case optimization
+    if min(a, b) == 1 { return 1 };
 
     let mut d = 1;
 
+    // Bitshift optimization technique
     while (a % 2 == 0) && (b % 2 == 0) {
         a = a / 2;
         b = b / 2;
@@ -289,6 +292,7 @@ fn gcd(mut a: UnsignedInt, mut b: UnsignedInt) -> UnsignedInt {
         b = b / 2;
     }
 
+    // Euclid's algorithm
     while (a != 0) && (b != 0) {
         if a > b {
             a = a % b;
