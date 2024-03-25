@@ -2,7 +2,9 @@
 #[cfg(test)]
 mod tests;
 
+use std::borrow::Borrow;
 use std::cmp::min;
+use std::iter::Peekable;
 use std::ops::{Add, Div, Mul, Neg, Sub};
 use std::str::FromStr;
 
@@ -68,96 +70,161 @@ impl FromStr for Rational {
     type Err = &'static str;
 
     fn from_str(value: &str) -> Result<Self, Self::Err> {
-        let mut numbers_str = String::with_capacity(value.len());
+        type DigitsSequence = str;
+        type ParsingError = &'static str;
+
+        fn parse_sign(chars_iter: &mut Peekable<impl Iterator<Item = char>>) -> SignedInt {
+            let first_char = chars_iter.peek();
+
+            match first_char {
+                Some('-') => {
+                    chars_iter.next();
+                    -1
+                }
+                _ => 1,
+            }
+        }
+
+        fn parse_integral_part(
+            chars_iter: &mut Peekable<impl Iterator<Item = char>>,
+            capacity: usize,
+        ) -> Result<impl Borrow<DigitsSequence>, ParsingError> {
+            
+            let mut res = String::with_capacity(capacity);
+
+            while let Some(char) = chars_iter.peek() {
+                if char.is_digit(10) {
+                    res.push(*char);
+                    chars_iter.next();
+                } else {
+                    break;
+                }
+            };
+
+            Ok(res)
+        }
+
+        fn parse_fractional_part(
+            chars_iter: &mut Peekable<impl Iterator<Item = char>>,
+            capacity: usize,
+        ) -> Result<impl Borrow<DigitsSequence>, ParsingError> {
+
+            match chars_iter.peek() {
+                Some('.') => chars_iter.next(),
+                None => return Ok(String::new()), 
+                _ => return Err("Error parsing string")
+            };
+
+            let mut res = String::with_capacity(capacity);
+
+            while let Some(char) = chars_iter.peek() {
+                if char.is_digit(10) {
+                    res.push(*char);
+                    chars_iter.next();
+                } else {
+                    break;
+                }
+            };
+
+            Ok(res)
+        }
+
+        fn parse_repeating_part(
+            chars_iter: &mut Peekable<impl Iterator<Item = char>>,
+            capacity: usize,
+        ) -> Result<impl Borrow<DigitsSequence>, ParsingError> {
+            match chars_iter.peek() {
+                Some('(') => chars_iter.next(),
+                None => return Ok(String::new()),
+                _ => return Err("Error parsing string")
+            };
+
+            let mut res = String::with_capacity(capacity);
+
+            while let Some(char) = chars_iter.peek() {
+                if char.is_digit(10) {
+                    res.push(*char);
+                    chars_iter.next();
+                } else {
+                    break;
+                }
+            };
+
+            if res.len() == 0 { return Err("Error parsing string") };
+
+            match chars_iter.next() {
+                Some(')') => Ok(res),
+                _ => Err("Error parsing string")
+            }
+        }
+
+        fn parse_digits_sequence(digits_sequence: &DigitsSequence) -> UnsignedInt {
+            // TODO: there are still possible parsing errors like PosOverFlow that should be handled instead of panicking
+            digits_sequence
+                .parse()
+                .expect("String must parse because it is non-empty and only contains digits, as ensured earlier")
+        }
+
+        fn get_p_q(
+            integral_part: &DigitsSequence,
+            fractional_part: &DigitsSequence,
+        ) -> (UnsignedInt, UnsignedInt) {
+            let both_parts = [integral_part, fractional_part].concat();
+
+            if both_parts.len() == 0 {
+                return (0, 1);
+            }
+
+            let p = parse_digits_sequence(&both_parts);
+
+            let q = (10 as UnsignedInt).pow(fractional_part.len() as u32);
+            (p, q)
+        }
+
+        fn get_repeating_p_q(repeating_part: &DigitsSequence) -> (UnsignedInt, UnsignedInt) {
+            if repeating_part.len() == 0 {
+                return (0, 1);
+            };
+
+            let p = parse_digits_sequence(repeating_part);
+
+            let mut q = 0;
+
+            for _ in 0..repeating_part.len() {
+                // TODO possible overflow
+                q *= 10;
+                q += 9;
+            }
+
+            (p, q)
+        }
+
+        let capacity = value.len();
         let mut chars_iter = value.chars().peekable();
         let first_char = chars_iter.peek();
 
-        let sign = match first_char {
-            Some('-') => {
-                chars_iter.next();
-                -1
-            }
-            _ => 1,
-        };
+        let sign = parse_sign(&mut chars_iter);
+        let integral_part = parse_integral_part(&mut chars_iter, capacity)?;
+        let fractional_part = parse_fractional_part(&mut chars_iter, capacity)?;
+        let repeating_part = parse_repeating_part(&mut chars_iter, capacity)?;
 
-        for char in &mut chars_iter {
-            if char == '.' {
-                break;
-            };
-            if !char.is_digit(10) {
-                return Err("Error parsing string");
-            };
-            numbers_str.push(char);
-        }
-        let mut decimal_power = 0;
-        let mut repeating = None;
-        for char in &mut chars_iter {
-            if char == '(' {
-                repeating = Some(String::new());
-                break;
-            };
-            if !char.is_digit(10) {
-                return Err("Error parsing string");
-            };
-            numbers_str.push(char);
-            decimal_power += 1;
+        // make sure iterator is exhausted
+        if let Some(_) = chars_iter.next() {
+            return Err("Error parsing string")
         }
 
-        if let Some(ref mut str) = repeating {
-            loop {
-                let char = match chars_iter.next() {
-                    None => return Err("Error parsing string"),
-                    Some(ch) => ch,
-                };
-                if char == ')' {
-                    match chars_iter.peek() {
-                        None => break,
-                        Some(_) => return Err("Error parsing string"),
-                    }
-                };
-                if !char.is_digit(10) {
-                    return Err("Error parsing string");
-                };
-                str.push(char);
-            };
-            if str.len() == 0 {
-                return Err("Error parsing string");
-            }
-        };
-
-        let repeating_str = repeating.unwrap_or_default();
-        if numbers_str.len() + repeating_str.len() == 0 {
+        if integral_part.borrow().len() + fractional_part.borrow().len() + repeating_part.borrow().len() == 0 {
             return Err("Error parsing string");
         };
-        let repeating_p = if repeating_str.len() == 0 {
-            0
-        } else {
-            // TODO: there are still possible parsing errors like PosOverFlow that should be handled instead of panicking
 
-            repeating_str
-                .parse()
-                .expect("String must parse because it is non-empty and only contains digits")
-        };
-        let mut repeating_q;
-        if repeating_str.len() == 0 {
-            repeating_q = 1;
-        } else {
-            repeating_q = 0;
-            for _ in 0..repeating_str.len() {
-                // TODO possible overflow
-                repeating_q *= 10;
-                repeating_q += 9;
-            }
-        }
+        let (p, q) = get_p_q(integral_part.borrow(), fractional_part.borrow());
+        let (repeating_p, repeating_q) = get_repeating_p_q(repeating_part.borrow());
 
-        // TODO: there are still possible parsing errors like PosOverFlow that should be handled instead of panicking
-        let p: SignedInt = if numbers_str.len() == 0 {
-            0
-        } else {
-            numbers_str.parse().expect("String must parse because it is non-empty and only contains digits, as ensured earlier")
-        };
-        let q: SignedInt = (10 as SignedInt).pow(decimal_power);
-        Ok(Rational::new(sign * p, q) + Rational::new(sign * repeating_p, repeating_q * q))
+        Ok(Rational::new(sign * p as SignedInt, q as SignedInt)
+            + Rational::new(
+                sign * repeating_p as SignedInt,
+                (repeating_q * q) as SignedInt,
+            ))
     }
 }
 
