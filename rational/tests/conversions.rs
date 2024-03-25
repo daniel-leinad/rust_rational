@@ -1,4 +1,4 @@
-use super::*;
+use rational::*;
 
 #[test]
 fn it_converts_from_integer() {

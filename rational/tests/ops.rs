@@ -1,4 +1,4 @@
-use super::*;
+use rational::*;
 
 #[test]
 fn zero_is_zero() {
