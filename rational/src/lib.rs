@@ -201,7 +201,6 @@ impl FromStr for Rational {
 
         let capacity = value.len();
         let mut chars_iter = value.chars().peekable();
-        let first_char = chars_iter.peek();
 
         let sign = parse_sign(&mut chars_iter);
         let integral_part = parse_integral_part(&mut chars_iter, capacity)?;
@@ -220,11 +219,8 @@ impl FromStr for Rational {
         let (p, q) = get_p_q(integral_part.borrow(), fractional_part.borrow());
         let (repeating_p, repeating_q) = get_repeating_p_q(repeating_part.borrow());
 
-        Ok(Rational::new(sign * p as SignedInt, q as SignedInt)
-            + Rational::new(
-                sign * repeating_p as SignedInt,
-                (repeating_q * q) as SignedInt,
-            ))
+        Ok(Rational::new(sign * p as SignedInt, q as SignedInt) + 
+           Rational::new(sign * repeating_p as SignedInt,(repeating_q * q) as SignedInt))
     }
 }
 
