@@ -35,7 +35,7 @@ impl Rational {
     /// therefore should only be used when you are 100% certain numerator and denominator are reduced
     /// Can be used for optimisations
     /// Panics when q == 0
-    pub fn new_reduced(p: SignedInt, q: SignedInt) -> Rational {
+    pub fn new_unchecked(p: SignedInt, q: SignedInt) -> Rational {
         if q == 0 {
             panic!("Denominator can't be zero!")
         };

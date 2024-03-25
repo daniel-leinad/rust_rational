@@ -15,7 +15,7 @@ pub fn rational(input: TokenStream) -> TokenStream {
     let (p, q) = (rational.numerator(), rational.denominator());
 
     let expanded = quote!{
-        Rational::new_reduced(#p, #q)
+        Rational::new_unchecked(#p, #q)
     };
 
     TokenStream::from(expanded)

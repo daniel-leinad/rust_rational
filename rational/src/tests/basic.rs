@@ -46,12 +46,12 @@ fn it_reduces() {
 }
 
 #[test]
-fn new_reduced_works() {
-    let _res = Rational::new_reduced(10, 3); 
+fn new_unchecked_works() {
+    let _res = Rational::new_unchecked(10, 3); 
 }
 
 #[should_panic(expected = "Denominator can't be zero!")]
 #[test]
-fn new_reduced_does_not_work_when_denominator_is_zero() {
-    let _res = Rational::new_reduced(10, 0);
+fn new_unchecked_does_not_work_when_denominator_is_zero() {
+    let _res = Rational::new_unchecked(10, 0);
 }
