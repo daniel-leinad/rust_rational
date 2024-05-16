@@ -100,22 +100,22 @@ fn it_negates() {
 }
 
 #[test]
-fn it_substracts() {
+fn it_subtracts() {
     let a: Rational = 5.into();
     let b = 0.into();
-    check_substraction(a, b, 5.into());
+    check_subtraction(a, b, 5.into());
 
     let a: Rational = 5.into();
     let b = 3.into();
-    check_substraction(a, b, 2.into());
+    check_subtraction(a, b, 2.into());
 
     let a: Rational = 5.into();
     let b = (-3).into();
-    check_substraction(a, b, 8.into());
+    check_subtraction(a, b, 8.into());
 
     let a: Rational = "0.3".parse().unwrap();
     let b = "0.1".parse().unwrap();
-    check_substraction(a, b, "0.2".parse().unwrap());
+    check_subtraction(a, b, "0.2".parse().unwrap());
 }
 
 fn check_addition(a: Rational, b: Rational, res: Rational) {
@@ -132,7 +132,7 @@ fn check_multiplication(a: Rational, b: Rational, res: Rational) {
 
 }
 
-fn check_substraction(a: Rational, b: Rational, res: Rational) {
+fn check_subtraction(a: Rational, b: Rational, res: Rational) {
 
     assert_eq!(a - b, res);
     assert_eq!(b - a, -res);

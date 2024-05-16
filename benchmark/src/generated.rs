@@ -1046,7 +1046,7 @@ pub fn addition() {
     rationals.push(rational!(-5555000) + rational!(-5555000));
 }
 
-pub fn substraction() {
+pub fn subtraction() {
     let mut rationals: Vec<Rational> = Vec::new();
 
     rationals.push(rational!(-1) - rational!(-1));

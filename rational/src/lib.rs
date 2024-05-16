@@ -19,7 +19,8 @@ pub struct Rational {
 }
 
 impl Rational {
-    /// Builds a new rational and reduces the undelying fraction
+    /// Builds a new rational and reduces the underlying fraction
+    ///
     /// Panics when q == 0
     pub fn new(p: SignedInt, q: SignedInt) -> Rational {
         if q == 0 {
@@ -35,6 +36,7 @@ impl Rational {
     /// Creates a new Rational without reducing the fraction,
     /// therefore should only be used when you are 100% certain numerator and denominator are reduced
     /// Can be used for optimisations
+    ///
     /// Panics when q == 0
     pub fn new_unchecked(p: SignedInt, q: SignedInt) -> Rational {
         if q == 0 {

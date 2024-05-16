@@ -16,7 +16,7 @@ fn main() {
     measure_func(generated::using_macro_repeating, "using_macro_repeating");
 
     measure_func(generated::addition, "addition");
-    measure_func(generated::substraction, "substraction");
+    measure_func(generated::subtraction, "subtraction");
     measure_func(generated::multiplication, "multiplication");
     measure_func(generated::division, "division");
 }

@@ -42,7 +42,7 @@ def make_floats(line_maker):
             line_maker(str(i) + "." + j)
 
 @rust_func_wrapper
-def make_thousandsth_floats(line_maker):
+def make_thousandth_floats(line_maker):
     for i in [3, 50234]:
         for j in range(3, 103):
             line_maker(f"{i}.{j:03}")
@@ -78,14 +78,14 @@ make_ints("using_macro_int", make_line_macro)
 make_floats("using_parse_float", make_line_parse)
 make_floats("using_macro_float", make_line_macro)
 
-make_thousandsth_floats("using_parse_float_2", make_line_parse)
-make_thousandsth_floats("using_macro_float_2", make_line_macro)
+make_thousandth_floats("using_parse_float_2", make_line_parse)
+make_thousandth_floats("using_macro_float_2", make_line_macro)
 
 make_repeating("using_parse_repeating", make_line_parse)
 make_repeating("using_macro_repeating", make_line_macro)
 
 make_ops("addition", make_line_op, "+")
-make_ops("substraction", make_line_op, "-")
+make_ops("subtraction", make_line_op, "-")
 make_ops("multiplication", make_line_op, "*")
 make_ops("division", make_line_op, "/")
     
