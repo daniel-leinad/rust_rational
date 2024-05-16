@@ -33,9 +33,11 @@ impl Rational {
         res
     }
 
-    /// Creates a new Rational without reducing the fraction,
-    /// therefore should only be used when you are 100% certain numerator and denominator are reduced
-    /// Can be used for optimisations
+    /// Creates a new Rational without reducing the fraction.
+    ///
+    /// Should only be used when you are 100% certain numerator and denominator are reduced.
+    ///
+    /// Can be used for optimisations.
     ///
     /// Panics when q == 0
     pub fn new_unchecked(p: SignedInt, q: SignedInt) -> Rational {
@@ -51,10 +53,20 @@ impl Rational {
         self.q = self.q / gcd;
     }
 
-    pub fn numerator(&self) -> SignedInt {
-        self.p
-    }
+    /// Returns the numerator of the underlying fraction
+    ///
+    /// The underlying fraction is guaranteed to be reduced.
+    ///
+    /// The sign of the numerator is not defined,
+    /// but it is guaranteed that a.numerator() / a.denominator() == a
+    pub fn numerator(&self) -> SignedInt { self.p }
 
+    /// Returns the denominator of the underlying fraction
+    ///
+    /// The underlying fraction is guaranteed to be reduced.
+    ///
+    /// The sign of the denominator is not defined,
+    /// but it is guaranteed that a.numerator() / a.denominator() == a
     pub fn denominator(&self) -> SignedInt {
         self.q
     }
