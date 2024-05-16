@@ -44,6 +44,7 @@
 //! For reducing fractions at compile-time, see rational-proc-macro crate.
 
 // TODO handle overflows
+// TODO add Ord implementation
 
 #[cfg(test)]
 mod tests;
