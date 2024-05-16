@@ -57,7 +57,7 @@ use std::str::FromStr;
 type UnsignedInt = usize;
 type SignedInt = isize;
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Eq, Hash)]
 pub struct Rational {
     p: SignedInt,
     q: SignedInt,
