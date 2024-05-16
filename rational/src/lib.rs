@@ -1,3 +1,48 @@
+//! This crate provides functionality related to rational numbers.
+//!
+//! Using rational numbers can be useful when precise calculations are needed and the accuracy provided by the floating point type is not enough.
+//!
+//! ([learn more about floating point accuracy](https://en.wikipedia.org/wiki/Floating-point_arithmetic#Accuracy_problems))
+//!
+//! # Features
+//! ## Building rational numbers from fractions
+//! ```
+//! # use rational::Rational;
+//! let a = Rational::new(1, 2);
+//! let b = Rational::new(-10, -20);
+//!
+//! assert_eq!(a, b);
+//! ```
+//! ## Basic arithmetic functions
+//! Crate currently supports addition, subtraction, multiplication and division.
+//! ```
+//! # use rational::Rational;
+//! let a = Rational::new(1, 2);
+//! let b = Rational::new(-1, 4);
+//!
+//! assert_eq!(a + b, Rational::new(1, 4));
+//! assert_eq!(a - b, Rational::new(3, 4));
+//! assert_eq!(a * b, Rational::new(-1, 8));
+//! assert_eq!(a / b, Rational::new(-2, 1));
+//! ```
+//! ## Parsing from a decimal representation
+//! ```
+//! # use rational::Rational;
+//! let a: Rational = "1.5".parse().unwrap();
+//!
+//! assert_eq!(a, Rational::new(3, 2));
+//!
+//! let b: Rational = "0.(6)".parse().unwrap();
+//!
+//! assert_eq!(b, Rational::new(2, 3));
+//! ```
+//! # Performance
+//! The Rational struct reduces all fractions internally, which can impose a performance penalty.
+//!
+//! Reducing fractions is necessary for consistent results regarding integer overflow.
+//!
+//! For reducing fractions at compile-time, see rational-proc-macro crate.
+
 // TODO handle overflows
 
 #[cfg(test)]
@@ -19,9 +64,9 @@ pub struct Rational {
 }
 
 impl Rational {
-    /// Builds a new rational and reduces the underlying fraction
+    /// Builds a new rational from p / q and reduces the underlying fraction.
     ///
-    /// Panics when q == 0
+    /// Panics when q == 0.
     pub fn new(p: SignedInt, q: SignedInt) -> Rational {
         if q == 0 {
             panic!("Denominator can't be zero!")
@@ -33,13 +78,13 @@ impl Rational {
         res
     }
 
-    /// Creates a new Rational without reducing the fraction.
+    /// Creates a new Rational from p / q without reducing the fraction.
     ///
     /// Should only be used when you are 100% certain numerator and denominator are reduced.
     ///
     /// Can be used for optimisations.
     ///
-    /// Panics when q == 0
+    /// Panics when q == 0.
     pub fn new_unchecked(p: SignedInt, q: SignedInt) -> Rational {
         if q == 0 {
             panic!("Denominator can't be zero!")
@@ -53,20 +98,20 @@ impl Rational {
         self.q = self.q / gcd;
     }
 
-    /// Returns the numerator of the underlying fraction
+    /// Returns the numerator of the underlying fraction.
     ///
     /// The underlying fraction is guaranteed to be reduced.
     ///
     /// The sign of the numerator is not defined,
-    /// but it is guaranteed that a.numerator() / a.denominator() == a
+    /// but it is guaranteed that a.numerator() / a.denominator() == a.
     pub fn numerator(&self) -> SignedInt { self.p }
 
-    /// Returns the denominator of the underlying fraction
+    /// Returns the denominator of the underlying fraction.
     ///
     /// The underlying fraction is guaranteed to be reduced.
     ///
     /// The sign of the denominator is not defined,
-    /// but it is guaranteed that a.numerator() / a.denominator() == a
+    /// but it is guaranteed that a.numerator() / a.denominator() == a.
     pub fn denominator(&self) -> SignedInt {
         self.q
     }
