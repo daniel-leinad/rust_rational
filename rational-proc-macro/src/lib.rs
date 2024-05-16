@@ -1,8 +1,28 @@
+//! This crate provides proc-macros for the rational crate.
+
 use proc_macro::TokenStream;
 use rational::Rational;
 use quote::quote;
-use std::stringify;
 
+/// Build a rational number with checks and internal fraction reduction at compile time.
+///
+/// The rational number can currently only be built from a decimal representation
+///
+/// ```
+/// # use rational_proc_macro::rational;
+/// # use rational::Rational;
+/// let a = rational!(5);
+/// assert_eq!(a, Rational::new(5, 1));
+///
+/// let b = rational!(1.5);
+/// assert_eq!(b, Rational::new(3, 2));
+///
+/// let c = rational!{0.(6)};
+/// assert_eq!(c, Rational::new(2, 3));
+///
+/// // let d = rational!(1, 3); // will not compile
+/// // let e = rational!(1 / 3); // will not compile
+/// ```
 #[proc_macro]
 pub fn rational(input: TokenStream) -> TokenStream {
     // "-1.3(5)" is tokenized as "- 1.3 (5)", so we need to get rid of the whitespaces
@@ -20,18 +40,3 @@ pub fn rational(input: TokenStream) -> TokenStream {
 
     TokenStream::from(expanded)
 }
-
-// use proc_macro;
-
-// #[proc_macro_derive(MyDerive)]
-// pub fn rational(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
-//     let input = proc_macro2::TokenStream::from(input);
-
-//     let str = input.to_string();
-
-//     println!("{str}");
-
-//     let output: proc_macro2::TokenStream = proc_macro2::TokenStream::new();
-
-//     proc_macro::TokenStream::from(output)
-// }
