@@ -2,6 +2,8 @@
 members = [ 
     "rational", 
     "rational-proc-macro",
+]
+exclude = [
     "benchmark",
 ]
 resolver = "2"
