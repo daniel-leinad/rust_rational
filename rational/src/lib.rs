@@ -2,7 +2,7 @@
 //!
 //! Using rational numbers can be useful when precise calculations are needed and the accuracy provided by the floating point type is not enough.
 //!
-//! ([learn more about floating point accuracy](https://en.wikipedia.org/wiki/Floating-point_arithmetic#Accuracy_problems))
+//! ([more about floating point accuracy](https://en.wikipedia.org/wiki/Floating-point_arithmetic#Accuracy_problems))
 //!
 //! # Features
 //! ## Building rational numbers from fractions
@@ -37,11 +37,11 @@
 //! assert_eq!(b, Rational::new(2, 3));
 //! ```
 //! # Performance
-//! The Rational struct reduces all fractions internally, which can impose a performance penalty.
+//! The [Rational] struct reduces all fractions internally, which can impose a performance penalty.
 //!
 //! Reducing fractions is necessary for consistent results regarding integer overflow.
 //!
-//! For reducing fractions at compile-time, see rational-proc-macro crate.
+//! For reducing fractions at compile-time, see [rational-proc-macro](../rational_proc_macro/index.html) crate.
 
 // TODO handle overflows
 // TODO add Ord implementation

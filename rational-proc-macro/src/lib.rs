@@ -1,4 +1,4 @@
-//! This crate provides proc-macros for the rational crate.
+//! This crate provides proc-macros for the [rational](../rational/index.html) crate.
 
 use proc_macro::TokenStream;
 use rational::Rational;
