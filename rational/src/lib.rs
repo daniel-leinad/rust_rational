@@ -44,14 +44,13 @@
 //! For reducing fractions at compile-time, see [rational-proc-macro](../rational_proc_macro/index.html) crate.
 
 // TODO handle overflows
-// TODO implement Ord
 // TODO implement Display
 
 #[cfg(test)]
 mod tests;
 
 use std::borrow::Borrow;
-use std::cmp::min;
+use std::cmp::{min, Ordering};
 use std::iter::Peekable;
 use std::ops::{Add, Div, Mul, Neg, Sub};
 use std::str::FromStr;
@@ -116,6 +115,10 @@ impl Rational {
     /// but it is guaranteed that a.numerator() / a.denominator() == a.
     pub fn denominator(&self) -> SignedInt {
         self.q
+    }
+
+    fn signum(&self) -> isize {
+        self.p.signum() * self.q.signum()
     }
 }
 
@@ -330,6 +333,37 @@ impl Sub for Rational {
 
     fn sub(self, rhs: Self) -> Self::Output {
         self + (-rhs)
+    }
+}
+
+impl PartialOrd for Rational {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for Rational {
+    fn cmp(&self, other: &Self) -> Ordering {
+        fn compare_same_signum(one: &Rational, other: &Rational) -> Ordering {
+            (one.p * other.q).cmp(&(other.p * one.q))
+        }
+
+        use Ordering::*;
+        match (self.signum(), other.signum()) {
+            (-1, -1) => compare_same_signum(self, other),
+            (-1, 0) => Less,
+            (-1, 1) => Less,
+
+            (0, -1) => Greater,
+            (0, 0) => Equal,
+            (0, 1) => Less,
+
+            (1, -1) => Greater,
+            (1, 0) => Greater,
+            (1, 1) => compare_same_signum(self, other),
+
+            _ => unreachable!(".signum() can only return values -1, 0 or 1")
+        }
     }
 }
 
