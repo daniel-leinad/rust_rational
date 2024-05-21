@@ -209,6 +209,57 @@ fn it_compares() {
     assert!(b <= a);
 }
 
+#[test]
+fn it_compares_equals() {
+    let a = Rational::new(5, 1);
+    let b = Rational::new(5, 1);
+
+    assert!(a >= b);
+    assert!(b >= a);
+    assert!(a <= b);
+    assert!(b <= a);
+
+    let a = Rational::new(-5, 1);
+    let b = Rational::new(5, -1);
+
+    assert!(a >= b);
+    assert!(b >= a);
+    assert!(a <= b);
+    assert!(b <= a);
+
+    let a = Rational::new(-5, -1);
+    let b = Rational::new(5, 1);
+
+    assert!(a >= b);
+    assert!(b >= a);
+    assert!(a <= b);
+    assert!(b <= a);
+
+    let a = Rational::new(5, 2);
+    let b = Rational::new(5, 2);
+
+    assert!(a >= b);
+    assert!(b >= a);
+    assert!(a <= b);
+    assert!(b <= a);
+
+    let a = Rational::new(-5, 2);
+    let b = Rational::new(5, -2);
+
+    assert!(a >= b);
+    assert!(b >= a);
+    assert!(a <= b);
+    assert!(b <= a);
+
+    let a = Rational::new(-5, -2);
+    let b = Rational::new(5, 2);
+
+    assert!(a >= b);
+    assert!(b >= a);
+    assert!(a <= b);
+    assert!(b <= a);
+}
+
 fn check_addition(a: Rational, b: Rational, res: Rational) {
 
     assert_eq!(a + b, res);
