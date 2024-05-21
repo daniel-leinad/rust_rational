@@ -185,7 +185,7 @@ fn it_compares() {
     assert!(b <= a);
 
     let a = Rational::new(-5, 1);
-    let b = Rational::new(6, 1);
+    let b = Rational::new(6, -1);
 
     assert!(a > b);
     assert!(a >= b);

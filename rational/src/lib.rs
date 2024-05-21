@@ -344,13 +344,13 @@ impl PartialOrd for Rational {
 
 impl Ord for Rational {
     fn cmp(&self, other: &Self) -> Ordering {
-        fn compare_same_signum(one: &Rational, other: &Rational) -> Ordering {
-            (one.p * other.q).cmp(&(other.p * one.q))
+        fn compare_abs(one: &Rational, other: &Rational) -> Ordering {
+            (one.p * other.q).abs().cmp(&(other.p * one.q).abs())
         }
 
         use Ordering::*;
         match (self.signum(), other.signum()) {
-            (-1, -1) => compare_same_signum(self, other),
+            (-1, -1) => compare_abs(self, other).reverse(),
             (-1, 0) => Less,
             (-1, 1) => Less,
 
@@ -360,7 +360,7 @@ impl Ord for Rational {
 
             (1, -1) => Greater,
             (1, 0) => Greater,
-            (1, 1) => compare_same_signum(self, other),
+            (1, 1) => compare_abs(self, other),
 
             _ => unreachable!(".signum() can only return values -1, 0 or 1")
         }
