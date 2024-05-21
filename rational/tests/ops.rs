@@ -118,6 +118,65 @@ fn it_subtracts() {
     check_subtraction(a, b, "0.2".parse().unwrap());
 }
 
+#[test]
+fn it_compares() {
+    let a: Rational = "0.5".parse().unwrap();
+    let b: Rational = "0.6".parse().unwrap();
+
+    assert!(b > a);
+    assert!(b >= a);
+    assert!(a < b);
+    assert!(a <= b);
+
+    let a: Rational = "0.5".parse().unwrap();
+    let b: Rational = "20".parse().unwrap();
+
+    assert!(b > a);
+    assert!(b >= a);
+    assert!(a < b);
+    assert!(a <= b);
+
+    let a: Rational = "0.5".parse().unwrap();
+    let b: Rational = "-0.6".parse().unwrap();
+
+    assert!(b < a);
+    assert!(b <= a);
+    assert!(a > b);
+    assert!(a >= b);
+
+    let a: Rational = "-0.5".parse().unwrap();
+    let b: Rational = "20".parse().unwrap();
+
+    assert!(b > a);
+    assert!(b >= a);
+    assert!(a < b);
+    assert!(a <= b);
+
+    let a: Rational = "-0.5".parse().unwrap();
+    let b: Rational = "-0.6".parse().unwrap();
+
+    assert!(b < a);
+    assert!(b <= a);
+    assert!(a > b);
+    assert!(a >= b);
+
+    let a: Rational = "-0.5".parse().unwrap();
+    let b: Rational = "-20".parse().unwrap();
+
+    assert!(b < a);
+    assert!(b <= a);
+    assert!(a > b);
+    assert!(a >= b);
+
+    let a: Rational = 5.into();
+    let b: Rational = 6.into();
+
+    assert!(a < b);
+    assert!(a <= b);
+    assert!(b > a);
+    assert!(b >= a);
+}
+
 fn check_addition(a: Rational, b: Rational, res: Rational) {
 
     assert_eq!(a + b, res);
