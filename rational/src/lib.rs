@@ -51,6 +51,7 @@ mod tests;
 
 use std::borrow::Borrow;
 use std::cmp::{min, Ordering};
+use std::hash::{Hash, Hasher};
 use std::iter::Peekable;
 use std::ops::{Add, Div, Mul, Neg, Sub};
 use std::str::FromStr;
@@ -59,7 +60,7 @@ type UnsignedInt = usize;
 type SignedInt = isize;
 
 // TODO derived Hash trait is implemented incorrectly, since PartialEq is not automatically derived
-#[derive(Debug, Copy, Clone, Eq, Hash)]
+#[derive(Debug, Copy, Clone, Eq)]
 pub struct Rational {
     p: SignedInt,
     q: SignedInt,
@@ -126,6 +127,17 @@ impl Rational {
 impl PartialEq for Rational {
     fn eq(&self, other: &Self) -> bool {
         self.p * other.q == self.q * other.p
+    }
+}
+
+impl Hash for Rational {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        let canonical_representation = match (self.p.signum(), self.q.signum()) {
+            (0, _) => (0, 1),
+            (_, -1) => (-self.p, -self.q),
+            _ => (self.p, self.q)
+        };
+        canonical_representation.hash(state)
     }
 }
 
