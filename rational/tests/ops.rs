@@ -1,29 +1,20 @@
+use std::hash::Hasher;
 use rational::*;
 
 #[test]
-fn zero_is_zero() {
-    let a =  Rational::new(0, 1);
-    let b =  Rational::new(0, -1343535);
-    assert_eq!(a, b);
+fn it_equates() {
+    for equal_pair in equals_set() {
+        assert_eq!(equal_pair.0, equal_pair.1, "pair: {equal_pair:?}");
+    }
 }
 
 #[test]
-fn it_equates() {
-    let a = Rational::new(15, 5);
-    let b = Rational::new(15, 5);
-    assert_eq!(a, b);
-
-    let a = Rational::new(15, 5);
-    let b = Rational::new(3, 1);
-    assert_eq!(a, b);
-
-    let a = Rational::new(15, -5);
-    let b = Rational::new(-15, 5);
-    assert_eq!(a, b);
-
-    let a = Rational::new(15, 5);
-    let b = Rational::new(-3, -1);
-    assert_eq!(a, b);
+fn equal_rationals_equal_hash() {
+    for equal_pair in equals_set() {
+        let hash_1 = default_hash(equal_pair.0);
+        let hash_2 = default_hash(equal_pair.1);
+        assert_eq!(hash_1, hash_2, "pair: {equal_pair:?}");
+    }
 }
 
 #[test]
@@ -279,4 +270,22 @@ fn check_subtraction(a: Rational, b: Rational, res: Rational) {
     assert_eq!(a - b, res);
     assert_eq!(b - a, -res);
 
+}
+
+
+fn equals_set() -> Vec<(Rational, Rational)> {
+    let mut res = vec![];
+    res.push((Rational::new(0, 1), Rational::new(0, -1343535)));
+    res.push((Rational::new(15, 5), Rational::new(15, 5)));
+    res.push((Rational::new(15, 5), Rational::new(3, 1)));
+    res.push((Rational::new(15, -5), Rational::new(-15, 5)));
+    res.push((Rational::new(15, 5), Rational::new(-3, -1)));
+    res
+}
+
+fn default_hash<T: std::hash::Hash>(value: T) -> u64 {
+    use std::hash::Hash;
+    let mut hasher = std::hash::DefaultHasher::default();
+    value.hash(&mut hasher);
+    hasher.finish()
 }
