@@ -30,7 +30,7 @@ pub fn rational(input: TokenStream) -> TokenStream {
 
     let rational: Rational = str
         .parse()
-        .expect(&format!("Incorrect rational literal: {str}"));
+        .unwrap_or_else(|_| panic!("Incorrect rational literal: {str}"));
     let (p, q) = (rational.numerator(), rational.denominator());
 
     let expanded = quote! {

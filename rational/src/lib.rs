@@ -98,8 +98,8 @@ impl Rational {
 
     fn reduce(&mut self) {
         let gcd = gcd(self.p.abs_diff(0), self.q.abs_diff(0)) as SignedInt;
-        self.p = self.p / gcd;
-        self.q = self.q / gcd;
+        self.p /= gcd;
+        self.q /= gcd;
     }
 
     /// Returns the numerator of the underlying fraction.
@@ -176,7 +176,7 @@ impl FromStr for Rational {
             let mut res = String::with_capacity(capacity);
 
             while let Some(char) = chars_iter.peek() {
-                if char.is_digit(10) {
+                if char.is_ascii_digit() {
                     res.push(*char);
                     chars_iter.next();
                 } else {
@@ -200,7 +200,7 @@ impl FromStr for Rational {
             let mut res = String::with_capacity(capacity);
 
             while let Some(char) = chars_iter.peek() {
-                if char.is_digit(10) {
+                if char.is_ascii_digit() {
                     res.push(*char);
                     chars_iter.next();
                 } else {
@@ -224,7 +224,7 @@ impl FromStr for Rational {
             let mut res = String::with_capacity(capacity);
 
             while let Some(char) = chars_iter.peek() {
-                if char.is_digit(10) {
+                if char.is_ascii_digit() {
                     res.push(*char);
                     chars_iter.next();
                 } else {
@@ -232,7 +232,7 @@ impl FromStr for Rational {
                 }
             }
 
-            if res.len() == 0 {
+            if res.is_empty() {
                 return Err("Error parsing string");
             };
 
@@ -255,7 +255,7 @@ impl FromStr for Rational {
         ) -> (UnsignedInt, UnsignedInt) {
             let both_parts = [integral_part, fractional_part].concat();
 
-            if both_parts.len() == 0 {
+            if both_parts.is_empty() {
                 return (0, 1);
             }
 
@@ -266,7 +266,7 @@ impl FromStr for Rational {
         }
 
         fn get_repeating_p_q(repeating_part: &DigitsSequence) -> (UnsignedInt, UnsignedInt) {
-            if repeating_part.len() == 0 {
+            if repeating_part.is_empty() {
                 return (0, 1);
             };
 
@@ -292,7 +292,7 @@ impl FromStr for Rational {
         let repeating_part = parse_repeating_part(&mut chars_iter, capacity)?;
 
         // make sure iterator is exhausted
-        if let Some(_) = chars_iter.next() {
+        if chars_iter.next().is_some() {
             return Err("Error parsing string");
         }
 
@@ -347,7 +347,7 @@ impl Neg for Rational {
 
     fn neg(self) -> Self::Output {
         let Rational { p, q } = self;
-        Rational { p: -p, q: q }
+        Rational { p: -p, q }
     }
 }
 
@@ -400,27 +400,27 @@ fn gcd(mut a: UnsignedInt, mut b: UnsignedInt) -> UnsignedInt {
 
     // Bitshift optimization technique
     while (a % 2 == 0) && (b % 2 == 0) {
-        a = a / 2;
-        b = b / 2;
-        d = d * 2;
+        a /= 2;
+        b /= 2;
+        d *= 2;
     }
 
     while a % 2 == 0 {
-        a = a / 2;
+        a /= 2;
     }
 
     while b % 2 == 0 {
-        b = b / 2;
+        b /= 2;
     }
 
     // Euclid's algorithm
     while (a != 0) && (b != 0) {
         if a > b {
-            a = a % b;
+            a %= b;
         } else {
-            b = b % a;
+            b %= a;
         }
     }
 
-    return (a + b) * d;
+    (a + b) * d
 }

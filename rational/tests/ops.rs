@@ -271,17 +271,16 @@ fn check_subtraction(a: Rational, b: Rational, res: Rational) {
 }
 
 fn equals_set() -> Vec<(Rational, Rational)> {
-    let mut res = vec![];
-    res.push((Rational::new(0, 1), Rational::new(0, -1343535)));
-    res.push((Rational::new(15, 5), Rational::new(15, 5)));
-    res.push((Rational::new(15, 5), Rational::new(3, 1)));
-    res.push((Rational::new(15, -5), Rational::new(-15, 5)));
-    res.push((Rational::new(15, 5), Rational::new(-3, -1)));
-    res
+    vec![
+        (Rational::new(0, 1), Rational::new(0, -1343535)),
+        (Rational::new(15, 5), Rational::new(15, 5)),
+        (Rational::new(15, 5), Rational::new(3, 1)),
+        (Rational::new(15, -5), Rational::new(-15, 5)),
+        (Rational::new(15, 5), Rational::new(-3, -1)),
+    ]
 }
 
 fn default_hash<T: std::hash::Hash>(value: T) -> u64 {
-    use std::hash::Hash;
     let mut hasher = std::hash::DefaultHasher::default();
     value.hash(&mut hasher);
     hasher.finish()
