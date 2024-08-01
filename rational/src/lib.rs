@@ -59,7 +59,6 @@ use std::str::FromStr;
 type UnsignedInt = usize;
 type SignedInt = isize;
 
-// TODO derived Hash trait is implemented incorrectly, since PartialEq is not automatically derived
 #[derive(Debug, Copy, Clone, Eq)]
 pub struct Rational {
     p: SignedInt,
