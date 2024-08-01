@@ -89,6 +89,7 @@ impl Rational {
     ///
     /// Panics when q == 0.
     pub fn new_unchecked(p: SignedInt, q: SignedInt) -> Rational {
+        // TODO add debug assertions
         if q == 0 {
             panic!("Denominator can't be zero!")
         };
