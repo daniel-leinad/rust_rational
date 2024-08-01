@@ -1,8 +1,8 @@
 //! This crate provides proc-macros for the [rational](../rational/index.html) crate.
 
 use proc_macro::TokenStream;
-use rational::Rational;
 use quote::quote;
+use rational::Rational;
 
 /// Build a rational number with checks and internal fraction reduction at compile time.
 ///
@@ -26,15 +26,14 @@ use quote::quote;
 #[proc_macro]
 pub fn rational(input: TokenStream) -> TokenStream {
     // "-1.3(5)" is tokenized as "- 1.3 (5)", so we need to get rid of the whitespaces
-    let str = input
-        .to_string()
-        .replace("- ", "-")
-        .replace(" (", "(");
+    let str = input.to_string().replace("- ", "-").replace(" (", "(");
 
-    let rational: Rational = str.parse().expect(&format!("Incorrect rational literal: {str}"));
+    let rational: Rational = str
+        .parse()
+        .expect(&format!("Incorrect rational literal: {str}"));
     let (p, q) = (rational.numerator(), rational.denominator());
 
-    let expanded = quote!{
+    let expanded = quote! {
         Rational::new_unchecked(#p, #q)
     };
 

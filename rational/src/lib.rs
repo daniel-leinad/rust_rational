@@ -108,7 +108,9 @@ impl Rational {
     ///
     /// The sign of the numerator is not defined,
     /// but it is guaranteed that a.numerator() / a.denominator() == a.
-    pub fn numerator(&self) -> SignedInt { self.p }
+    pub fn numerator(&self) -> SignedInt {
+        self.p
+    }
 
     /// Returns the denominator of the underlying fraction.
     ///
@@ -136,7 +138,7 @@ impl Hash for Rational {
         let canonical_representation = match (self.p.signum(), self.q.signum()) {
             (0, _) => (0, 1),
             (_, -1) => (-self.p, -self.q),
-            _ => (self.p, self.q)
+            _ => (self.p, self.q),
         };
         canonical_representation.hash(state)
     }
@@ -171,7 +173,6 @@ impl FromStr for Rational {
             chars_iter: &mut Peekable<impl Iterator<Item = char>>,
             capacity: usize,
         ) -> Result<impl Borrow<DigitsSequence>, ParsingError> {
-            
             let mut res = String::with_capacity(capacity);
 
             while let Some(char) = chars_iter.peek() {
@@ -181,7 +182,7 @@ impl FromStr for Rational {
                 } else {
                     break;
                 }
-            };
+            }
 
             Ok(res)
         }
@@ -190,11 +191,10 @@ impl FromStr for Rational {
             chars_iter: &mut Peekable<impl Iterator<Item = char>>,
             capacity: usize,
         ) -> Result<impl Borrow<DigitsSequence>, ParsingError> {
-
             match chars_iter.peek() {
                 Some('.') => chars_iter.next(),
-                None => return Ok(String::new()), 
-                _ => return Err("Error parsing string")
+                None => return Ok(String::new()),
+                _ => return Err("Error parsing string"),
             };
 
             let mut res = String::with_capacity(capacity);
@@ -206,7 +206,7 @@ impl FromStr for Rational {
                 } else {
                     break;
                 }
-            };
+            }
 
             Ok(res)
         }
@@ -218,7 +218,7 @@ impl FromStr for Rational {
             match chars_iter.peek() {
                 Some('(') => chars_iter.next(),
                 None => return Ok(String::new()),
-                _ => return Err("Error parsing string")
+                _ => return Err("Error parsing string"),
             };
 
             let mut res = String::with_capacity(capacity);
@@ -230,13 +230,15 @@ impl FromStr for Rational {
                 } else {
                     break;
                 }
-            };
+            }
 
-            if res.len() == 0 { return Err("Error parsing string") };
+            if res.len() == 0 {
+                return Err("Error parsing string");
+            };
 
             match chars_iter.next() {
                 Some(')') => Ok(res),
-                _ => Err("Error parsing string")
+                _ => Err("Error parsing string"),
             }
         }
 
@@ -291,18 +293,25 @@ impl FromStr for Rational {
 
         // make sure iterator is exhausted
         if let Some(_) = chars_iter.next() {
-            return Err("Error parsing string")
+            return Err("Error parsing string");
         }
 
-        if integral_part.borrow().len() + fractional_part.borrow().len() + repeating_part.borrow().len() == 0 {
+        if integral_part.borrow().len()
+            + fractional_part.borrow().len()
+            + repeating_part.borrow().len()
+            == 0
+        {
             return Err("Error parsing string");
         };
 
         let (p, q) = get_p_q(integral_part.borrow(), fractional_part.borrow());
         let (repeating_p, repeating_q) = get_repeating_p_q(repeating_part.borrow());
 
-        Ok(Rational::new(sign * p as SignedInt, q as SignedInt) + 
-           Rational::new(sign * repeating_p as SignedInt,(repeating_q * q) as SignedInt))
+        Ok(Rational::new(sign * p as SignedInt, q as SignedInt)
+            + Rational::new(
+                sign * repeating_p as SignedInt,
+                (repeating_q * q) as SignedInt,
+            ))
     }
 }
 
@@ -376,14 +385,16 @@ impl Ord for Rational {
             (1, 0) => Greater,
             (1, 1) => compare_abs(self, other),
 
-            _ => unreachable!(".signum() can only return values -1, 0 or 1")
+            _ => unreachable!(".signum() can only return values -1, 0 or 1"),
         }
     }
 }
 
 fn gcd(mut a: UnsignedInt, mut b: UnsignedInt) -> UnsignedInt {
     // Simple case optimization
-    if min(a, b) == 1 { return 1 };
+    if min(a, b) == 1 {
+        return 1;
+    };
 
     let mut d = 1;
 

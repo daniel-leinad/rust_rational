@@ -20,7 +20,7 @@ fn cant_make_denominator_zero() {
 
 #[test]
 fn new_unchecked_works() {
-    let _res = Rational::new_unchecked(10, 3); 
+    let _res = Rational::new_unchecked(10, 3);
 }
 
 #[should_panic(expected = "Denominator can't be zero!")]

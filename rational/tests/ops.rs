@@ -1,5 +1,5 @@
-use std::hash::Hasher;
 use rational::*;
+use std::hash::Hasher;
 
 #[test]
 fn it_equates() {
@@ -68,7 +68,7 @@ fn it_divides() {
     assert_eq!(a / b, Rational::new(3, 5));
 }
 
-#[should_panic(expected="Can't divide by zero")]
+#[should_panic(expected = "Can't divide by zero")]
 #[test]
 fn doesnt_divide_by_zero() {
     let a: Rational = 1.into();
@@ -81,7 +81,11 @@ fn it_adds() {
     check_addition(1.into(), 2.into(), 3.into());
     check_addition(0.into(), 5.into(), 5.into());
     check_addition((-3).into(), 5.into(), 2.into());
-    check_addition("2.3".parse().unwrap(), "10.185".parse().unwrap(), "12.485".parse().unwrap());
+    check_addition(
+        "2.3".parse().unwrap(),
+        "10.185".parse().unwrap(),
+        "12.485".parse().unwrap(),
+    );
 }
 
 #[test]
@@ -252,26 +256,19 @@ fn it_compares_equals() {
 }
 
 fn check_addition(a: Rational, b: Rational, res: Rational) {
-
     assert_eq!(a + b, res);
     assert_eq!(b + a, res);
-
 }
 
 fn check_multiplication(a: Rational, b: Rational, res: Rational) {
-
     assert_eq!(a * b, res);
     assert_eq!(b * a, res);
-
 }
 
 fn check_subtraction(a: Rational, b: Rational, res: Rational) {
-
     assert_eq!(a - b, res);
     assert_eq!(b - a, -res);
-
 }
-
 
 fn equals_set() -> Vec<(Rational, Rational)> {
     let mut res = vec![];
